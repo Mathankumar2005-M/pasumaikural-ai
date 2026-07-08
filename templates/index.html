@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>பசுமை குரல் — Pasumai Kural</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Thambi+2:wght@500;700&family=Catamaran:wght@400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --soil-950:#1b1408;
+    --leaf-900:#173425;
+    --leaf-700:#20563a;
+    --leaf-500:#3c8a5f;
+    --leaf-300:#8fc79f;
+    --husk-100:#f2ecd9;
+    --husk-50:#faf7ec;
+    --sun-500:#e8a838;
+    --alert-500:#c9542c;
+    --line: rgba(23,52,37,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--husk-50);
+    color:var(--soil-950);
+    font-family:'Catamaran',sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .tamil{font-family:'Baloo Thambi 2',sans-serif;}
+  .mono{font-family:'Space Mono',monospace;}
+
+  header{
+    background:var(--leaf-900);
+    color:var(--husk-100);
+    padding:2.2rem 1.5rem 2.6rem;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 12% 120%, rgba(232,168,56,0.25), transparent 55%),
+      radial-gradient(circle at 90% -10%, rgba(60,138,95,0.35), transparent 50%);
+    pointer-events:none;
+  }
+  .header-inner{max-width:920px;margin:0 auto;position:relative;}
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--leaf-300);
+    margin:0 0 0.6rem;
+  }
+  h1{
+    font-family:'Baloo Thambi 2',sans-serif;
+    font-size:clamp(2rem, 5vw, 2.8rem);
+    margin:0 0 0.3rem;
+    line-height:1.1;
+  }
+  .subtitle{
+    color:var(--husk-100);
+    opacity:0.82;
+    font-size:1.02rem;
+    max-width:52ch;
+    margin:0;
+  }
+
+  main{max-width:920px;margin:0 auto;padding:2.4rem 1.5rem 4rem;}
+
+  .grid{display:grid;grid-template-columns:1fr;gap:1.4rem;}
+  @media(min-width:820px){ .grid{grid-template-columns:1fr 1fr;} }
+
+  .card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:1.6rem;
+    box-shadow:0 1px 2px rgba(23,52,37,0.04);
+  }
+  .card h2{
+    font-family:'Baloo Thambi 2',sans-serif;
+    font-size:1.25rem;
+    margin:0 0 0.2rem;
+    color:var(--leaf-900);
+  }
+  .card .desc{
+    font-size:0.88rem;
+    color:#5a5a4e;
+    margin:0 0 1.1rem;
+  }
+
+  label{
+    display:block;
+    font-size:0.78rem;
+    font-family:'Space Mono',monospace;
+    color:var(--leaf-700);
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    margin:0.9rem 0 0.35rem;
+  }
+  label:first-of-type{margin-top:0;}
+  input[type=range]{
+    width:100%;
+    accent-color:var(--leaf-500);
+  }
+  .range-row{display:flex;align-items:center;gap:0.8rem;}
+  .range-val{
+    font-family:'Space Mono',monospace;
+    font-size:0.85rem;
+    min-width:3.6em;
+    text-align:right;
+    color:var(--soil-950);
+  }
+
+  button{
+    font-family:'Catamaran',sans-serif;
+    font-weight:700;
+    font-size:0.95rem;
+    border:none;
+    border-radius:9px;
+    padding:0.75rem 1.1rem;
+    cursor:pointer;
+    transition:transform 0.12s ease, box-shadow 0.12s ease;
+  }
+  button:active{transform:translateY(1px);}
+  .btn-primary{
+    background:var(--leaf-500);
+    color:#fff;
+    width:100%;
+    margin-top:1.2rem;
+  }
+  .btn-primary:hover{box-shadow:0 4px 14px rgba(60,138,95,0.35);}
+  .btn-primary:disabled{
+    background:#c8cbc5;
+    cursor:progress;
+    box-shadow:none;
+  }
+
+  .upload-zone{
+    border:2px dashed var(--line);
+    border-radius:12px;
+    padding:1.4rem;
+    text-align:center;
+    cursor:pointer;
+    transition:border-color 0.15s ease, background 0.15s ease;
+    position:relative;
+    background:var(--husk-50);
+  }
+  .upload-zone:hover{border-color:var(--leaf-500);}
+  .upload-zone.has-image{padding:0.6rem;}
+  .upload-zone input[type=file]{
+    position:absolute; inset:0; opacity:0; cursor:pointer;
+  }
+  .upload-hint{font-size:0.85rem;color:#6b6b5e;}
+  .preview-img{
+    max-width:100%;
+    max-height:220px;
+    border-radius:8px;
+    display:block;
+    margin:0 auto;
+  }
+
+  .result{
+    margin-top:1.3rem;
+    padding:1.1rem;
+    border-radius:10px;
+    background:var(--husk-100);
+    border-left:4px solid var(--leaf-500);
+    display:none;
+  }
+  .result.show{display:block;}
+  .result.status-alert{border-left-color:var(--alert-500);}
+  .result-status{
+    font-family:'Baloo Thambi 2',sans-serif;
+    font-size:1.15rem;
+    color:var(--leaf-900);
+    margin:0 0 0.25rem;
+  }
+  .result-status.status-alert{color:var(--alert-500);}
+  .result-confidence{
+    font-family:'Space Mono',monospace;
+    font-size:0.78rem;
+    color:#6b6b5e;
+    margin:0 0 0.6rem;
+  }
+  .result-tamil{
+    font-family:'Baloo Thambi 2',sans-serif;
+    font-size:1rem;
+    color:var(--soil-950);
+    margin:0 0 0.7rem;
+    line-height:1.5;
+  }
+  .play-btn{
+    background:var(--sun-500);
+    color:var(--soil-950);
+    font-size:0.85rem;
+    padding:0.5rem 0.9rem;
+  }
+  .play-btn:hover{box-shadow:0 4px 14px rgba(232,168,56,0.4);}
+
+  .error-msg{
+    color:var(--alert-500);
+    font-size:0.85rem;
+    margin-top:0.7rem;
+    display:none;
+  }
+  .error-msg.show{display:block;}
+
+  .chat-msg{
+    margin-bottom:0.8rem;
+    padding:0.7rem 0.9rem;
+    border-radius:10px;
+    font-size:0.92rem;
+    line-height:1.5;
+    max-width:88%;
+  }
+  .chat-msg.user{
+    background:var(--husk-100);
+    margin-left:auto;
+    color:var(--soil-950);
+  }
+  .chat-msg.bot{
+    background:#eef6ef;
+    border-left:3px solid var(--leaf-500);
+    font-family:'Baloo Thambi 2',sans-serif;
+  }
+  .chat-msg .play-btn{
+    display:inline-block;
+    margin-top:0.5rem;
+    padding:0.35rem 0.7rem;
+    font-size:0.75rem;
+  }
+  .chat-empty{
+    color:#8a8a7c;
+    font-size:0.85rem;
+    font-style:italic;
+  }
+
+  footer{
+    text-align:center;
+    font-size:0.78rem;
+    color:#8a8a7c;
+    padding:0 1.5rem 2.5rem;
+    font-family:'Space Mono',monospace;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <p class="eyebrow">Farm Sensor + Vision · உள்ளூர் மொழி எச்சரிக்கை</p>
+    <h1 class="tamil">பசுமை குரல்</h1>
+    <p class="subtitle">Sensor readings இருந்தோ, இலை புகைப்படத்தில் இருந்தோ — உங்கள் செடியின் நிலையை பகுப்பாய்வு செய்து தமிழில் குரல் எச்சரிக்கை தரும்.</p>
+  </div>
+</header>
+
+<main>
+  <div class="grid">
+
+    <!-- SENSOR CARD -->
+    <section class="card">
+      <h2 class="tamil">Sensor பகுப்பாய்வு</h2>
+      <p class="desc">Soil moisture, temperature, humidity, light readings-ஐ கொடுத்து plant status-ஐ கணிக்கவும்.</p>
+
+      <label for="soil">Soil moisture (%)</label>
+      <div class="range-row">
+        <input type="range" id="soil" min="0" max="100" value="45" oninput="syncVal('soil')">
+        <span class="range-val mono" id="soil-val">45</span>
+      </div>
+
+      <label for="temp">Temperature (°C)</label>
+      <div class="range-row">
+        <input type="range" id="temp" min="10" max="45" value="28" oninput="syncVal('temp')">
+        <span class="range-val mono" id="temp-val">28</span>
+      </div>
+
+      <label for="hum">Humidity (%)</label>
+      <div class="range-row">
+        <input type="range" id="hum" min="10" max="100" value="55" oninput="syncVal('hum')">
+        <span class="range-val mono" id="hum-val">55</span>
+      </div>
+
+      <label for="light">Light (normalized 0–1)</label>
+      <div class="range-row">
+        <input type="range" id="light" min="0" max="100" value="60" oninput="syncVal('light')">
+        <span class="range-val mono" id="light-val">0.60</span>
+      </div>
+
+      <button class="btn-primary" id="sensorBtn" onclick="analyzeSensor()">Analyze Sensor Data</button>
+      <p class="error-msg" id="sensorError"></p>
+
+      <div class="result" id="sensorResult">
+        <p class="result-status" id="sensorStatus"></p>
+        <p class="result-confidence" id="sensorConfidence"></p>
+        <p class="result-tamil" id="sensorTamil"></p>
+        <button class="play-btn" id="sensorPlayBtn" onclick="playAudio('sensor')" style="display:none;">🔊 குரல் கேளுங்கள்</button>
+      </div>
+    </section>
+
+    <!-- IMAGE CARD -->
+    <section class="card">
+      <h2 class="tamil">இலை புகைப்படம்</h2>
+      <p class="desc">செடியின் இலையை புகைப்படம் எடுத்து பதிவேற்றவும் — நோய், பூச்சி தாக்குதல் அல்லது சத்துக் குறைபாட்டை கண்டறியும்.</p>
+
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="leafPhoto" accept="image/*" capture="environment" onchange="handleFileSelect(event)">
+        <div id="uploadPrompt">
+          <p class="upload-hint tamil" style="font-size:1rem;margin:0 0 0.3rem;">📷 இங்கே தட்டவும் அல்லது இழுத்து விடவும்</p>
+          <p class="upload-hint">JPG, PNG — camera அல்லது gallery</p>
+        </div>
+        <img id="previewImg" class="preview-img" style="display:none;">
+      </div>
+
+      <button class="btn-primary" id="imageBtn" onclick="analyzeLeaf()" disabled>Analyze Leaf Photo</button>
+      <p class="error-msg" id="imageError"></p>
+
+      <div class="result" id="imageResult">
+        <p class="result-status" id="imageStatus"></p>
+        <p class="result-confidence" id="imageConfidence"></p>
+        <p class="result-tamil" id="imageTamil"></p>
+        <button class="play-btn" id="imagePlayBtn" onclick="playAudio('image')" style="display:none;">🔊 குரல் கேளுங்கள்</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- AI CHAT ASSISTANT -->
+  <section class="card" style="margin-top:1.4rem;">
+    <h2 class="tamil">🌾 உங்கள் கேள்வி கேளுங்கள்</h2>
+    <p class="desc">Plant care பற்றி எந்த கேள்வி வேண்டுமானாலும் கேளுங்கள் — AI உதவியாளர் தமிழில் பதில் தரும். மேலே analysis result இருந்தால், அதை கருத்தில் கொண்டு பதில் தரும்.</p>
+
+    <div id="chatLog" style="max-height:280px;overflow-y:auto;margin-bottom:1rem;"></div>
+
+    <div style="display:flex;gap:0.6rem;">
+      <input type="text" id="chatInput" placeholder="உ.தா: என் மிளகாய் செடி இலைகள் சுருங்குது, என்ன பண்ணுவேன்?"
+        style="flex:1;padding:0.7rem 0.9rem;border:1px solid var(--line);border-radius:9px;font-family:'Catamaran',sans-serif;font-size:0.95rem;"
+        onkeydown="if(event.key==='Enter') askChat();">
+      <button class="btn-primary" id="chatBtn" style="width:auto;margin-top:0;white-space:nowrap;" onclick="askChat()">கேளுங்கள்</button>
+    </div>
+    <p class="error-msg" id="chatError"></p>
+  </section>
+
+</main>
+
+<footer>pasumai-kural-ai · scikit-learn sensor + leaf-color models · Claude AI chat assistant · gTTS Tamil voice</footer>
+
+<script>
+  const ALERT_STATUSES = new Set([
+    "Thirsty", "Pest Risk", "Nutrient Deficient", "Disease Spots", "Pest Damage"
+  ]);
+
+  let audioCache = { sensor: null, image: null };
+  let selectedFile = null;
+  let lastStatus = null;   // last prediction status, sent as context to chat
+  let chatAudioCache = {}; // msgId -> base64 mp3
+  let chatMsgCounter = 0;
+
+  function syncVal(id){
+    const el = document.getElementById(id);
+    const out = document.getElementById(id + '-val');
+    if(id === 'light'){
+      out.textContent = (el.value / 100).toFixed(2);
+    } else {
+      out.textContent = el.value;
+    }
+  }
+
+  function setResult(prefix, data){
+    const resultBox = document.getElementById(prefix + 'Result');
+    const statusEl = document.getElementById(prefix + 'Status');
+    const confEl = document.getElementById(prefix + 'Confidence');
+    const tamilEl = document.getElementById(prefix + 'Tamil');
+    const playBtn = document.getElementById(prefix + 'PlayBtn');
+
+    const isAlert = ALERT_STATUSES.has(data.status);
+    resultBox.classList.toggle('status-alert', isAlert);
+    statusEl.classList.toggle('status-alert', isAlert);
+
+    statusEl.textContent = data.status;
+    confEl.textContent = `confidence: ${(data.confidence * 100).toFixed(1)}%`;
+    tamilEl.textContent = data.tamil_message;
+
+    audioCache[prefix] = data.audio_b64 || null;
+    playBtn.style.display = data.audio_b64 ? 'inline-block' : 'none';
+
+    resultBox.classList.add('show');
+    lastStatus = data.status;
+  }
+
+  function showError(prefix, msg){
+    const errEl = document.getElementById(prefix + 'Error');
+    errEl.textContent = msg;
+    errEl.classList.add('show');
+  }
+  function clearError(prefix){
+    const errEl = document.getElementById(prefix + 'Error');
+    errEl.classList.remove('show');
+    errEl.textContent = '';
+  }
+
+  function playAudio(prefix){
+    const b64 = audioCache[prefix];
+    if(!b64) return;
+    const audio = new Audio(`data:audio/mp3;base64,${b64}`);
+    audio.play();
+  }
+
+  async function analyzeSensor(){
+    clearError('sensor');
+    const btn = document.getElementById('sensorBtn');
+    btn.disabled = true;
+    btn.textContent = 'Analyzing…';
+
+    const payload = {
+      soil_moisture: Number(document.getElementById('soil').value),
+      temperature: Number(document.getElementById('temp').value),
+      humidity: Number(document.getElementById('hum').value),
+      light: Number(document.getElementById('light').value) / 100,
+    };
+
+    try {
+      const res = await fetch('/api/predict-sensor', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if(!res.ok){ throw new Error(data.error || 'Request failed'); }
+      setResult('sensor', data);
+    } catch(err){
+      showError('sensor', err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Analyze Sensor Data';
+    }
+  }
+
+  function handleFileSelect(event){
+    const file = event.target.files[0];
+    if(!file) return;
+    selectedFile = file;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      document.getElementById('uploadPrompt').style.display = 'none';
+      const img = document.getElementById('previewImg');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      document.getElementById('uploadZone').classList.add('has-image');
+    };
+    reader.readAsDataURL(file);
+
+    document.getElementById('imageBtn').disabled = false;
+    clearError('image');
+  }
+
+  async function analyzeLeaf(){
+    if(!selectedFile) return;
+    clearError('image');
+    const btn = document.getElementById('imageBtn');
+    btn.disabled = true;
+    btn.textContent = 'Analyzing…';
+
+    const fd = new FormData();
+    fd.append('image', selectedFile);
+
+    try {
+      const res = await fetch('/api/predict-image', { method: 'POST', body: fd });
+      const data = await res.json();
+      if(!res.ok){ throw new Error(data.error || 'Request failed'); }
+      setResult('image', data);
+    } catch(err){
+      showError('image', err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Analyze Leaf Photo';
+    }
+  }
+
+  function renderChatLog(){
+    const log = document.getElementById('chatLog');
+    if(log.dataset.hasMsgs !== 'true'){
+      log.innerHTML = '<p class="chat-empty">உங்கள் கேள்வியை கீழே தட்டச்சு செய்யுங்கள்…</p>';
+    }
+  }
+  renderChatLog();
+
+  function appendChatMsg(role, text, msgId){
+    const log = document.getElementById('chatLog');
+    log.dataset.hasMsgs = 'true';
+    if(log.querySelector('.chat-empty')) log.innerHTML = '';
+
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + role;
+    div.textContent = text;
+
+    if(role === 'bot' && msgId){
+      const playBtn = document.createElement('button');
+      playBtn.className = 'play-btn';
+      playBtn.textContent = '🔊 கேளுங்கள்';
+      playBtn.onclick = () => playChatAudio(msgId);
+      playBtn.id = 'chatPlay-' + msgId;
+      div.appendChild(document.createElement('br'));
+      div.appendChild(playBtn);
+    }
+
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+    return div;
+  }
+
+  function playChatAudio(msgId){
+    const b64 = chatAudioCache[msgId];
+    if(!b64) return;
+    new Audio(`data:audio/mp3;base64,${b64}`).play();
+  }
+
+  async function askChat(){
+    const input = document.getElementById('chatInput');
+    const question = input.value.trim();
+    if(!question) return;
+
+    clearError('chat');
+    appendChatMsg('user', question);
+    input.value = '';
+
+    const btn = document.getElementById('chatBtn');
+    btn.disabled = true;
+    btn.textContent = '…';
+
+    const thinkingDiv = appendChatMsg('bot', 'யோசிக்கிறேன்…');
+
+    try {
+      const payload = { question: question, context: {} };
+      if(lastStatus) payload.context.status = lastStatus;
+
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if(!res.ok){ throw new Error(data.error || 'Request failed'); }
+
+      thinkingDiv.remove();
+      chatMsgCounter += 1;
+      const msgId = 'm' + chatMsgCounter;
+      chatAudioCache[msgId] = data.audio_b64 || null;
+      const botDiv = appendChatMsg('bot', data.answer, data.audio_b64 ? msgId : null);
+    } catch(err){
+      thinkingDiv.remove();
+      showError('chat', err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'கேளுங்கள்';
+    }
+  }
+</script>
+
+</body>
+</html>
