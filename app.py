@@ -20,6 +20,8 @@ Run locally:
     python app.py
     -> open http://127.0.0.1:5000
 """
+import os
+
 from flask import Flask, render_template
 
 from ai_routes import ai_bp
@@ -36,5 +38,8 @@ def index():
 
 
 if __name__ == "__main__":
-    # debug=True is fine for local dev; Vercel/production should not use this.
-    app.run(debug=True)
+    app.run(
+        debug=False,
+        host="0.0.0.0",
+        port=int(os.environ.get("PORT", 5000)),
+    )

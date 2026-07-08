@@ -4,4 +4,4 @@ scikit-learn==1.5.2
 numpy==1.26.4
 Pillow==10.4.0
 joblib==1.4.2
-anthropic==0.39.0
+anthropic==0.39.0gunicorn==23.0.0
