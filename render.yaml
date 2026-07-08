@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: pasumai-kural-ai
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    healthCheckPath: /
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        value: ""
